@@ -172,7 +172,7 @@ const RECIPES = [
 
 const $ = id => document.getElementById(id);
 const fold = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
-let sel = new Set(["nonino"]); // example start: the bottle from the request
+let sel = new Set();
 try { const s = JSON.parse(localStorage.getItem("bcf-sel")); if (Array.isArray(s)) sel = new Set(s.filter(k=>NAME[k])); } catch(e){}
 let query = "";
 
