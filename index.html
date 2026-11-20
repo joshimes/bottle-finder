@@ -77,6 +77,13 @@ h2{font-family:var(--display);font-size:1.05rem;margin:22px 0 8px;letter-spacing
 .chip .ct{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
 .chip[aria-pressed="true"] .ct{color:var(--accent-fg);opacity:.85}
+.full-recipe{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+.full-recipe summary{cursor:pointer;color:var(--accent);font-size:.9rem;font-weight:600;list-style:none;padding:4px 0}
+.full-recipe summary::-webkit-details-marker{display:none}
+.full-recipe summary::before{content:"▸ "}
+.full-recipe[open] summary::before{content:"▾ "}
+.full-ing{margin:8px 0 0;padding:0 0 0 1.1em;font-size:.88rem;color:var(--fg);display:grid;gap:3px}
+.full-steps{margin:10px 0 0;font-size:.88rem;color:var(--muted);line-height:1.5}
 footer{margin-top:28px;color:var(--muted);font-size:.8rem}
 footer a{color:var(--accent)}
 @media (prefers-reduced-motion:no-preference){.card{animation:in .18s ease-out}@keyframes in{from{opacity:.4;transform:translateY(4px)}}}
@@ -170,6 +177,49 @@ const RECIPES = [
    [["tequila"],"Reposado tequila","2 cups"],[["stgeorge"],"St. George spiced pear liqueur","3/4 cup"]]}
 ];
 
+const FULL_RECIPES = [
+ {n:1, ingredients:["Milk – 4 cups","Ghirardelli 72% cocoa bar – 1 bar","Heavy cream – 2 cups","Simple syrup – 1/8 cup","Rum or mezcal – 6 oz","Crème de cacao – 1 oz","Chocolate bitters – a few dashes"],
+  steps:"Simmer milk and chocolate in a pot, stirring, until the chocolate melts. Blend the cream and simple syrup into a whip. Non-alcoholic: top with whipped cream and grated chocolate. Alcoholic: put the spirit, crème de cacao and bitters in the mug first, then add the hot chocolate and toppings."},
+ {n:2, ingredients:["Orange wine – 1 bottle","Brandy (pisco) – 3/4 cup","Lemon juice – 3/4 cup","Simple syrup – 1/2 cup","Apple cider – 1/4 cup","Club soda – 2 cups (added last)","Lemon (sliced), cinnamon sticks, thyme – garnish"],
+  steps:"Mix everything except the club soda and chill 2+ hours. Add the club soda, stir, and serve over crushed ice. Garnish with lemon, thyme and a cinnamon stick."},
+ {n:3, ingredients:["Bourbon – 2 cups","Coffee liqueur – 1 cup","Vanilla bean honey syrup – 3/4 cup","Espresso – 1.5 cups"],
+  steps:"Honey vanilla bean syrup: simmer 1 cup honey, 1 cup water and the seeds of 2 vanilla beans on low until the honey thins. Cool, strain, store in fridge up to 4 weeks. To serve, shake with ice and strain into a chilled martini glass."},
+ {n:4, ingredients:["Sarti Rosa – 2.25 cups","Spiced cranberry juice – 3 cups","Lime juice – 3/4 cup","Prosecco – to top","Club soda – to top"],
+  steps:"Mix the first three, pour into wine glasses, and top with prosecco and club soda. Garnish with lime and cranberries. Spiced cranberry juice: combine equal parts cranberries and water with cinnamon sticks, cloves, nutmeg, star anise, cardamom. Boil until berries pop, simmer 20–30 min, strain twice."},
+ {n:5, ingredients:["Bourbon – 2 cups","Chai cinnamon syrup – 1/2 cup","Angostura bitters – 1 oz","Water – 3/4 cup"],
+  steps:"Chai cinnamon syrup: heat 1/2 cup brown sugar and 1/2 cup water, add 3 chai tea bags and 2 cinnamon sticks, simmer ~5 min, then lower heat 5 more minutes. Cool, remove bags and cinnamon, store in fridge up to 4 weeks. Stir cocktail ingredients, chill (overnight is best), serve over a large ice cube with a cinnamon stick."},
+ {n:6, ingredients:["Whiskey – 2 cups","Sweet vermouth – 1/2 cup","Applesauce juice – 1.5 cups","Lemon juice – 1/2 cup","Simple syrup – 2/3 cup","Water – 1/2 cup"],
+  steps:"Applesauce juice: simmer 2 cups applesauce with 3/4 cup water over medium heat ~5 minutes, then strain through a fine mesh strainer. Stir and serve chilled. Pairs well with latkes and sour cream."},
+ {n:7, ingredients:["Bourbon – 2 cups","Lemon juice – 2 cups","Elderflower liqueur – amount not given","Pomegranate juice – 4 cups","Simple syrup – 1/2 cup","Prosecco – 2 bottles"],
+  steps:"Serve over crushed ice with rosemary, lemon slices and pomegranate seeds."},
+ {n:8, ingredients:["Herb-forward gin (St. George Terroir) – 2 cups","Lemon juice – 3/4 cup","Honey rosemary syrup – 3/4 cup","Whole milk – 3/4 cup (for clarifying)"],
+  steps:"Honey rosemary syrup: simmer equal parts honey and water with 2–3 rosemary sprigs per 1/2 cup honey until honey thins, 2 more minutes, cool with rosemary in. Leave overnight for stronger flavor. Keeps up to 4 weeks. Clarifying: mix gin, lemon, syrup. Pour slowly into the milk, cover, let sit at room temp at least 1 hour. Strain through wet coffee filter and fine mesh strainer (4–6 hours; may need several filters). Chill, serve in chilled martini glasses with a rosemary sprig."},
+ {n:9, ingredients:["Dark rum – 3/4 cup","Peanut butter whiskey – 3/4 cup","Heavy cream – 1 cup","Simple syrup – 1/2 cup","Whole eggs – 8","Peanut butter – optional scoop; melted for the rim"],
+  steps:"Blend until smooth and chill at least 30 minutes. Serve in a chilled martini glass rimmed with melted peanut butter. Note: contains raw eggs."},
+ {n:10, ingredients:["Gin – 2 cups","Lemon juice – 1 cup","Pear juice – 2 cups","Simple syrup – 1/2 cup","Champagne – to top"],
+  steps:"Stir and chill. To serve, put about 3–4 oz of the mix in a flute, top with champagne, and garnish with a lemon twist."},
+ {n:11, ingredients:["Mezcal – 1 cup","Añejo tequila – 1 cup","Lime juice – 1 cup","Orange juice – 1/4 cup","Crème de cacao – 1/2 cup","Banana liqueur – 1/2 cup","Banana simple syrup – 1/2 cup","Water (dilution) – 1 cup"],
+  steps:"Banana simple syrup: simmer 1/2 cup water, 1/2 cup sugar and 1 sliced banana 3–4 minutes, then on low 5 more minutes. Cool and strain. Mix all, serve chilled over crushed ice, garnish with grated dark chocolate."},
+ {n:12, ingredients:["Vodka – 4 cups","Cointreau – 1 1/3 cups","Lemon juice – 1–2 cups","Simple syrup – 1 cup","Cranberry juice – 2 cups","Water – 2 cups"],
+  steps:"Mix and serve in chilled martini glasses with lemon slices and/or cranberries."},
+ {n:13, ingredients:["Traverse City cherry whiskey – 4 cups","Lemon juice – 2 cups","Cointreau – 1/2 cup","Pecan spiced simple syrup – 1.5 cups","Water – 1.5 cups","Red wine float or foam – 1 oz per drink (optional)","Orange bitters – for foam only (optional)"],
+  steps:"Pecan spiced syrup: heat 2 cups water and 2 cups sugar with 4 cinnamon sticks, 10–15 cloves and 1 cup pecans. Once sugar dissolves, simmer 5–8 more minutes. Cool and strain. Red wine foam: 3 oz red wine, 1 oz simple syrup, 2 oz cold water, 1/2 tsp orange bitters, 0.25 g xanthan gum, 1 g methylcellulose (or 1 egg white) in an ISI whip canister. Charge with 1 nitrogen charger, shake, rest 30 sec, charge again, refrigerate 30–40 minutes. Stir cocktail, chill, serve over a large ice cube with float or foam."},
+ {n:14, ingredients:["Orange clove bourbon – 1.5 cups","Aperol – 1.5 cups","Amaro Nonino – 1.5 cups","Lemon juice – 1.5 cups","Water – 1.25 cups"],
+  steps:"Orange clove bourbon: put 1.5 cups bourbon in a jar with the zest of 1 orange and 10–15 cloves. Shake and refrigerate 2–3 days, then strain. Chill well, serve in coupes, garnish with an orange wedge studded with cloves."},
+ {n:15, ingredients:["Irish whiskey – 1 1/3 cups","Heavy cream – 1 cup","Sweetened condensed milk – 1 can (14 oz)","Instant coffee – 2 tbsp","Vanilla extract – a dash","Almond extract – a dash","Ground cinnamon – a dash","Ground nutmeg – a dash","Vanilla bean – 1"],
+  steps:"Mix well and store in a sealed bottle in the fridge for 24 hours before serving. Keeps about 1 week. Serve over ice with three coffee beans."},
+ {n:16, ingredients:["Gin – 6 oz","Blue curaçao – 2 oz","Maraschino liqueur – 4 oz","Green Chartreuse – 6 oz","Lime juice – 6 oz","Whole milk – 5 oz (for clarifying)"],
+  steps:"Stir, then pour slowly into the milk. Cover and let sit 1–2 hours. Strain through a wet coffee filter (takes a while), chill, and serve in chilled martini glasses with Luxardo cherries."},
+ {n:17, ingredients:["Fresh mint leaves – 1–2 cups (muddled in pitcher)","Elderflower liqueur – 2.5 cups","Lemon juice – 1.5 cups","Spiced cranberry juice – 2.5 cups","Prosecco – 2 oz per drink","Club soda – 2 oz per drink"],
+  steps:"Stir and chill. Serve over crushed ice in spritz glasses, top with prosecco and soda, garnish with mint and cranberries. Spiced cranberry juice: same as recipe #4."},
+ {n:18, ingredients:["Gin or vodka – 2 cups","Lemon juice – 1 cup","Lillet Blanc – 1/2 cup","Thyme simple syrup – 1/2 cup","Thyme tea – 3/4 cup"],
+  steps:"Thyme simple syrup: simmer equal parts sugar and water with 8–10 thyme sprigs per 1/2 cup of each for 4–5 minutes, then on low 2–3 more minutes. Cool, strain, store in fridge up to 4 weeks. Stir, chill, serve in coupes with a thyme sprig."},
+ {n:19, ingredients:["Reposado tequila – 2 cups","St. George spiced pear liqueur – 3/4 cup","Lime juice – 1 cup","Agave – 3/4 cup","Water – 1 cup"],
+  steps:"Stir, chill, and serve over crushed ice with a lime wheel and grated nutmeg."}
+];
+const FULL_BY_N = {};
+FULL_RECIPES.forEach(r => FULL_BY_N[r.n] = r);
+
 const $ = id => document.getElementById(id);
 const fold = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
 let sel = new Set();
@@ -231,6 +281,17 @@ function renderResults(){
     });
     card.appendChild(ul);
     if(r.note){ const p=document.createElement("p"); p.className="note"; p.textContent=r.note; card.appendChild(p); }
+
+    const full = FULL_BY_N[r.n];
+    if(full){
+      const det=document.createElement("details"); det.className="full-recipe";
+      const sum=document.createElement("summary"); sum.textContent="Full recipe"; det.appendChild(sum);
+      const il=document.createElement("ul"); il.className="full-ing";
+      full.ingredients.forEach(i=>{ const li=document.createElement("li"); li.textContent=i; il.appendChild(li); });
+      det.appendChild(il);
+      const sp=document.createElement("p"); sp.className="full-steps"; sp.textContent=full.steps; det.appendChild(sp);
+      card.appendChild(det);
+    }
     box.appendChild(card);
   });
   const tip=document.createElement("p"); tip.className="note"; tip.textContent="Tap an ingredient on a card to mark it as found. Amounts are for the full batch.";
